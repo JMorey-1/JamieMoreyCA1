@@ -17,7 +17,8 @@ public class studentWorkload {
 
             switch (option) {
                 case 1:
-                    System.out.println("Student data has been output to file.");
+                    readLines();
+                    System.out.println("Student data has been output to Status file.");
                     break;
 
                 case 2:
@@ -56,7 +57,46 @@ public class studentWorkload {
 
         selection = input.nextInt();
         return selection;    
-    }
-
     
- }
+    }
+    //Method for reading lines from student text file
+    //Reads 3 lines in and continues doing so till reaching the end of the file
+    public static void readLines() {
+       try (Scanner myScan = new Scanner(new FileReader("Students.txt"))) { 
+        int linesToRead = 3;
+        String[] lines = new String[linesToRead];
+
+        while (myScan.hasNextLine()) {
+            for (int i = 0; i < linesToRead && myScan.hasNextLine(); i++) {
+                lines[i] = myScan.nextLine();
+                System.out.println(lines[i]);
+            }
+
+            processLines(lines);
+        }
+    } catch (Exception e) {
+        System.out.println("Error reading lines from the file.");
+    }
+}
+      
+     //Method for Processing my lines in the student text file
+     public static void processLines(String[] lines){
+     
+          
+        //ADD VALIDATION PER LINE 
+             String[] words2 = lines[0].split(" ");
+             String word1 = words2[0];
+             String word2 = words2[1];
+             String line2 = lines[1];
+             String line3 = lines[2];
+             System.out.println(word1);
+             System.out.println(word2);
+             System.out.println(line2);
+             System.out.println(line3);
+             
+     }
+          
+      } 
+    
+
+
