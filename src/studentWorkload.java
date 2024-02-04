@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 
 /**
  *
- * @author jamie
+ * @author jamie morey sba23159
  */
 public class studentWorkload {
 
@@ -14,8 +14,7 @@ public class studentWorkload {
             
              
             Scanner scanner = new Scanner(System.in);
-            
-           
+                      
             
             //Displaying console menu and calling the appropriate methods depending on users choice.
             while (true) {
@@ -96,14 +95,14 @@ public class studentWorkload {
                 writeStudentData(studentData, "Status.txt");
                 validEntries++;
             } else {
-                // If not valid, provide a message indicating the issue
-                System.out.println("Invalid data detected. Entry skipped.");
+                // If not valid, provide the user a message indicating the issue
+                System.out.println("Invalid data detected. Please check the Student.txt file. Entry skipped.");
               }
              }
 
-                   // Provide summary feedback to the user
+                   // Provide feedback to the user
                    if (validEntries > 0) {
-                    System.out.println("Successfully processed " + validEntries + " valid entries. Data written to Status.txt.");
+                    System.out.println("Successfully processed " + validEntries + " valid entries. Data written to Status.txt file.");
                    } else {
                     System.out.println("No valid entries found in the Students.txt file.");
                    }
