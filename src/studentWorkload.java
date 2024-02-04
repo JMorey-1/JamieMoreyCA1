@@ -10,6 +10,8 @@ import java.io.BufferedWriter;
  */
 public class studentWorkload {
 
+    //Link to Github repo: https://github.com/JMorey-1/JamieMoreyCA1
+    
          public static void main(String[] args) {
             
              
