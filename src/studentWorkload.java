@@ -96,21 +96,21 @@ public class studentWorkload {
 
        
   
-   //WRITE TO FILE METHOD
+//WRITE TO FILE METHOD
 private static void writeToFile(String[] data, String filename) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-        // Output the validated data to the file
-        writer.write(data[0]);  // First line (Name)
+        // Extract the last name from the first line
+        String[] nameParts = data[0].split("\\s+");
+        String lastName = (nameParts.length > 1) ? nameParts[1] : "";
+
+        // Output the formatted data to the file
+        writer.write(data[2] + " - " + lastName);  // Line 1: Student Number - Last Name
         writer.newLine();
 
         // Convert the class number to workload description
         String workloadDescription = changeToWorkload(data[1]);
 
-        writer.write(workloadDescription);  // Second line (Workload)
-        writer.newLine();
-
-        // Output the remaining data
-        writer.write(data[2]);  // Third line (StudentNumber)
+        writer.write(workloadDescription);  // Line 2: Workload
         writer.newLine();
 
         writer.newLine();  // Add an extra newline for separation between entries
@@ -124,12 +124,8 @@ private static void writeToFile(String[] data, String filename) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Please enter the student data (Name Lastname ClassNumber StudentNumber):");
-
-        // Read the entire line of input
         String inputLine = scanner.nextLine();
-
-        // Split the input into an array of strings using a single space as the separator
-        String[] studentData = inputLine.split(" ");
+         String[] studentData = inputLine.split(" ");
 
         // Validate and process the input
         if (studentData.length == 4) {
@@ -138,7 +134,7 @@ private static void writeToFile(String[] data, String filename) {
 
             // Validate and process the lines
             if (isValidData(new String[]{firstLine, studentData[2], studentData[3]})) {
-                writeToFile(new String[]{firstLine, studentData[2], studentData[3]}, "Status.txt");  // Call the new method
+                writeToFile(new String[]{firstLine, studentData[2], studentData[3]}, "Status.txt");
                 System.out.println("Student data has been added to Status file.");
             } else {
                 System.out.println("Invalid data. Please enter data in the correct format.");
@@ -254,8 +250,5 @@ private static boolean areRemainingDigitsValid(String studentNumber) {
     return false;
 }
 
-
-
 }
-
 
