@@ -17,14 +17,14 @@ public class studentWorkload {
             
            
             
-            //Displaying console and calling the approiate methods depending on users choice.
+            //Displaying console menu and calling the appropriate methods depending on users choice.
             while (true) {
             int userOption = menu();
                                  
             switch (userOption) {
                 case 1:
                     readStudentData();                   
-                   break;
+                    break;
         
                 case 2:
                     addStudentData();
@@ -53,7 +53,8 @@ public class studentWorkload {
          
  //METHODS    
          
- //MENU METHOD
+//MENU METHOD
+//Structuring and displaying the console menu
   public static int menu() {
 
         int selection;
@@ -74,7 +75,8 @@ public class studentWorkload {
         }
      
         
-//READING and validating data from the Student.txt file   
+//READING STUDENT.TXT DATA
+//Reading and validating data from the Student.txt file   
 
   public static void readStudentData() {
     try (Scanner myScan = new Scanner(new FileReader("Students.txt"))) {
@@ -88,31 +90,32 @@ public class studentWorkload {
                 studentData[i] = myScan.nextLine();
             }
 
-            // Call my validation method to check the data
+            // Call the validation method to check the data
             if (isValidData(studentData)) {
-                // If valid, call my writeStudentData method to output the lines to the "Status.txt" file
+                // If valid, call the writeStudentData method to output the lines to the "Status.txt" file
                 writeStudentData(studentData, "Status.txt");
                 validEntries++;
             } else {
                 // If not valid, provide a message indicating the issue
                 System.out.println("Invalid data detected. Entry skipped.");
-            }
-        }
+              }
+             }
 
-        // Provide summary feedback to the user
-        if (validEntries > 0) {
-            System.out.println("Successfully processed " + validEntries + " valid entries. Data written to Status.txt.");
-        } else {
-            System.out.println("No valid entries found in the Students.txt file.");
-        }
+                   // Provide summary feedback to the user
+                   if (validEntries > 0) {
+                    System.out.println("Successfully processed " + validEntries + " valid entries. Data written to Status.txt.");
+                   } else {
+                    System.out.println("No valid entries found in the Students.txt file.");
+                   }
 
-    } catch (Exception e) {
-        System.out.println("Error reading lines from the file. Please check the file format and try again.");
-    }
-}
+                    } catch (Exception e) {
+                    System.out.println("Error reading lines from the file. Please check the file format and try again.");
+                    }
+                   }
     
-  
-//WRITE TO FILE METHOD
+//WRITE METHOD
+//Method for writing validated student data to Status.txt
+// It is called by the readStudentData method and also by the addStudentData method.
 private static void writeStudentData(String[] data, String filename) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
         // Extract the last name from the first line
@@ -129,19 +132,21 @@ private static void writeStudentData(String[] data, String filename) {
         writer.write(workloadDescription);  // Line 2: Workload
         writer.newLine();
 
-        writer.newLine();  // Add an extra newline for separation between entries
-    } catch (Exception e) {
-        System.out.println("Error writing to the file.");
-    }
+        writer.newLine();  // Add an extra line for between entries for readability
+         
+         } catch (Exception e) {
+          System.out.println("Error writing to the file.");
+         }
 }
  
-//ADD STUDENT DATA MANUALLY
-    public static void addStudentData() {
+//ADD STUDENT DATA
+//Method to manually add data to the Status.txt file. It is called in Switch Case 2. 
+ public static void addStudentData() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Please enter the student data (Name Lastname ClassNumber StudentNumber):");
+        System.out.println("Please enter the student data in the following format: (Name Lastname ClassNumber StudentNumber):");
         String inputLine = scanner.nextLine();
-         String[] studentData = inputLine.split(" ");
+        String[] studentData = inputLine.split(" ");
 
         // Validate and process the input
         if (studentData.length == 4) {
@@ -155,26 +160,31 @@ private static void writeStudentData(String[] data, String filename) {
             } else {
                 System.out.println("Invalid data. Please enter data in the correct format.");
             }
-        } else {
+            
+            } else {
             System.out.println("Invalid data. Please enter data in the correct format.");
-        }
+            }
     }
 
-
-//Method to change number of classes into a workload    
+//CHANGE CLASS NUMBER TO WORKLOAD
+//Method to change number of classes into the corresponding workload    
 private static String changeToWorkload(String classNumber) {
+   
     try {
         int numberOfClasses = Integer.parseInt(classNumber);
 
         switch (numberOfClasses) {
             case 1:
                 return "Very Light";
+            
             case 2:
                 return "Light";
+            
             case 3:
             case 4:
             case 5:
                 return "Part Time";
+            
             default:
                 return "Full Time";
         }
@@ -185,8 +195,9 @@ private static String changeToWorkload(String classNumber) {
     
 
 //VALIDATION METHODS 
-    
-// Validation method based on specified criteria
+
+//I've broken down the data validation into different methods so they can easily be changed if required.
+//isValidData organises and calls several of the other validation methods.
  private static boolean isValidData(String[] studentData) {
     String[] nameData = studentData[0].split("\\s+");
 
@@ -195,6 +206,7 @@ private static String changeToWorkload(String classNumber) {
            isStudentNumberValid(studentData[2]);
 }
 
+//FIRST NAME LAST NAME
 //Checking first name is only letters, and that last name can be either letters or numbers.
 private static boolean isNameDataValid(String[] nameData) {
     return nameData.length == 2 &&
@@ -202,6 +214,7 @@ private static boolean isNameDataValid(String[] nameData) {
            nameData[1].matches("[A-Za-z0-9]+");
 }
 
+//NUMBER OF CLASSES
 //Checking that student class number is an integer between 1 and 8, inclusive.
 private static boolean isClassNumberValid(String classNumber) {
     try {
@@ -212,6 +225,7 @@ private static boolean isClassNumberValid(String classNumber) {
     }
 }
 
+//STUDENT NUMBER
 //Consolidating the various methods that check each part of the Student number
 private static boolean isStudentNumberValid(String studentNumber) {
     return studentNumber.length() >= 6 &&
@@ -221,7 +235,9 @@ private static boolean isStudentNumberValid(String studentNumber) {
            areRemainingDigitsValid(studentNumber);
     
 }
-//Checking that the first two characters of a student number are integers and they greater than 20
+
+//FIRST TWO CHARACTERS 
+//Checking that the first two characters of any student number are integers and they are greater than 20
 private static boolean isYearValid(String studentNumber) {
     return Character.isDigit(studentNumber.charAt(0)) &&
            Character.isDigit(studentNumber.charAt(1)) &&
@@ -229,17 +245,19 @@ private static boolean isYearValid(String studentNumber) {
     
 }
 
-//Checking that the 3rd and 4th characters of the Student Number are letters
+//3RD AND 4TH CHARACTERS
+//Checking that the 3rd and 4th characters of any Student Number are letters
 private static boolean areThirdAndFourthCharsLetters(String studentNumber) {
     return Character.isLetter(studentNumber.charAt(2)) && Character.isLetter(studentNumber.charAt(3));
 }
 
-
+//5TH CHARACTER
 //Checking that the 5th character of the student number is a letter or integer
 private static boolean isFifthCharValid(String studentNumber) {
     return Character.isLetterOrDigit(studentNumber.charAt(4));
 }
 
+//FINAL NUMBER
 //Checking that the number that follows the last letter is between 1 and 200 inclusive.
 //Since the 5th character can be either a letter or number we check that first to see where to begin reading our number.
 private static boolean areRemainingDigitsValid(String studentNumber) {
