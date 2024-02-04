@@ -11,19 +11,20 @@ import java.io.BufferedWriter;
 public class studentWorkload {
 
          public static void main(String[] args) {
+            
+             
             Scanner scanner = new Scanner(System.in);
             
+           
+            
+            //Displaying console and calling the approiate methods depending on users choice.
             while (true) {
-            int option = menu();
-            
-            
-            
-            
-            switch (option) {
+            int userOption = menu();
+                                 
+            switch (userOption) {
                 case 1:
                     readStudentData();                   
-                    System.out.println("Valid data from the file Student.txt has been output to the Status.txt file.");
-                    break;
+                   break;
         
                 case 2:
                     addStudentData();
@@ -34,14 +35,14 @@ public class studentWorkload {
                     System.exit(0);
 
                 default:
-                    System.out.println("Invalid choice please enter 1, 2, or 3.");
+                    System.out.println("Invalid choice, please select option 1, 2, or 3.");
                     break;
                    }
             
                    System.out.println("Do you want to return to the main menu? (y/n)");
-                   String answer = scanner.next();
+                   String userResponse = scanner.next();
             
-                   if (!answer.equals("y")) {
+                   if (!userResponse.equals("y")) {
                    System.out.println("Exiting the program, goodbye!");
                    System.exit(0);
                   }
@@ -52,52 +53,67 @@ public class studentWorkload {
          
  //METHODS    
          
-    //MENU METHOD
-        public static int menu() {
+ //MENU METHOD
+  public static int menu() {
 
         int selection;
         Scanner input = new Scanner(System.in);
 
         System.out.println("Please choose an option to continue:");
         System.out.println("------------------------------------");
-        System.out.println("Please press 1 to output data to file");
-        System.out.println("Please press 2 to add data to file");
-        System.out.println("Please press 3 to exit program");
-
+        System.out.println("Please press 1 to read data from Student.txt file, validate it and output the data to Status.txt file.");
+        System.out.println();
+        System.out.println("Please press 2 to manually add data to the Status.txt file.");
+        System.out.println();
+        System.out.println("Please press 3 to exit the program.");
+        System.out.println("------------------------------------");
+        System.out.println();
+        System.out.print("Enter your choice: ");
         selection = input.nextInt();
         return selection;    
         }
      
         
-   //READING IN THE STUDENT    
-    //Method for reading lines from student text file
-    //Reads 3 lines in and continues doing so till reaching the end of the file
-        public static void readStudentData() {
-        try (Scanner myScan = new Scanner(new FileReader("Students.txt"))) {
-            while (myScan.hasNextLine()) {
-                String[] studentData = new String[3];
+//READING and validating data from the Student.txt file   
 
-                // Read 3 lines
-                for (int i = 0; i < 3 && myScan.hasNextLine(); i++) {
-                    studentData[i] = myScan.nextLine();
-                }
+  public static void readStudentData() {
+    try (Scanner myScan = new Scanner(new FileReader("Students.txt"))) {
+        int validEntries = 0;  // Track the number of valid entries processed
 
-              // Call my validation method to check the data
-            if (isValidData(studentData)) {
-              // If valid, call my writeToFile method to output the lines to the "Status.txt" file
-                writeToFile(studentData, "Status.txt");
+        while (myScan.hasNextLine()) {
+            String[] studentData = new String[3];
+
+            // Read 3 lines
+            for (int i = 0; i < 3 && myScan.hasNextLine(); i++) {
+                studentData[i] = myScan.nextLine();
             }
-                
-                   }
-                    } catch (Exception e) {
-                      System.out.println("Error reading lines from the file.");
-                    }
-                   }
 
-       
+            // Call my validation method to check the data
+            if (isValidData(studentData)) {
+                // If valid, call my writeStudentData method to output the lines to the "Status.txt" file
+                writeStudentData(studentData, "Status.txt");
+                validEntries++;
+            } else {
+                // If not valid, provide a message indicating the issue
+                System.out.println("Invalid data detected. Entry skipped.");
+            }
+        }
+
+        // Provide summary feedback to the user
+        if (validEntries > 0) {
+            System.out.println("Successfully processed " + validEntries + " valid entries. Data written to Status.txt.");
+        } else {
+            System.out.println("No valid entries found in the Students.txt file.");
+        }
+
+    } catch (Exception e) {
+        System.out.println("Error reading lines from the file. Please check the file format and try again.");
+    }
+}
+    
   
 //WRITE TO FILE METHOD
-private static void writeToFile(String[] data, String filename) {
+private static void writeStudentData(String[] data, String filename) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
         // Extract the last name from the first line
         String[] nameParts = data[0].split("\\s+");
@@ -119,7 +135,7 @@ private static void writeToFile(String[] data, String filename) {
     }
 }
  
-   //ADD STUDENT DATA MANUALLY
+//ADD STUDENT DATA MANUALLY
     public static void addStudentData() {
         Scanner scanner = new Scanner(System.in);
 
@@ -134,7 +150,7 @@ private static void writeToFile(String[] data, String filename) {
 
             // Validate and process the lines
             if (isValidData(new String[]{firstLine, studentData[2], studentData[3]})) {
-                writeToFile(new String[]{firstLine, studentData[2], studentData[3]}, "Status.txt");
+                writeStudentData(new String[]{firstLine, studentData[2], studentData[3]}, "Status.txt");
                 System.out.println("Student data has been added to Status file.");
             } else {
                 System.out.println("Invalid data. Please enter data in the correct format.");
@@ -196,15 +212,16 @@ private static boolean isClassNumberValid(String classNumber) {
     }
 }
 
+//Consolidating the various methods that check each part of the Student number
 private static boolean isStudentNumberValid(String studentNumber) {
     return studentNumber.length() >= 6 &&
            isYearValid(studentNumber) &&
            isFifthCharValid(studentNumber) &&
-           areThirdAndFourthCharactersLetters(studentNumber) &&
+           areThirdAndFourthCharsLetters(studentNumber) &&
            areRemainingDigitsValid(studentNumber);
     
 }
-
+//Checking that the first two characters of a student number are integers and they greater than 20
 private static boolean isYearValid(String studentNumber) {
     return Character.isDigit(studentNumber.charAt(0)) &&
            Character.isDigit(studentNumber.charAt(1)) &&
@@ -213,7 +230,7 @@ private static boolean isYearValid(String studentNumber) {
 }
 
 //Checking that the 3rd and 4th characters of the Student Number are letters
-private static boolean areThirdAndFourthCharactersLetters(String studentNumber) {
+private static boolean areThirdAndFourthCharsLetters(String studentNumber) {
     return Character.isLetter(studentNumber.charAt(2)) && Character.isLetter(studentNumber.charAt(3));
 }
 
